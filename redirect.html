@@ -13,35 +13,54 @@
 </head>
 <body class="flex flex-col items-center p-6 md:p-10">
 
+    <!-- Header Branding -->
+    <div class="w-full max-w-4xl flex justify-center items-center mb-8 px-4">
+        <div class="text-xl font-bold flex items-center gap-2">
+            <span class="text-blue-400">⚡</span> Linkonator
+        </div>
+    </div>
+
     <div class="w-full max-w-3xl main-card p-10 text-center shadow-2xl">
+        <!-- Timer Section -->
         <h1 id="timerText" class="text-3xl font-bold mb-4 text-blue-400">Opening App in 5...</h1>
         <p class="text-gray-400 mb-8 italic">Please wait while we boost your engagement safely.</p>
 
-        <!-- Ad Space Placeholder -->
+        <!-- Ad Space Placeholder[cite: 2] -->
         <div class="border-2 border-dashed border-[#2d364d] text-gray-600 py-10 rounded-2xl mb-10 font-bold">
             NATIVE BANNER AD SPACE
         </div>
 
-        <!-- Essential for Creators (Affiliate Section) -->
-        <h3 class="text-sm font-bold italic underline mb-6 text-gray-300">Top Recommendations for You</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Essential for Creators (Affiliate Section)[cite: 2] -->
+        <h3 class="text-sm font-bold italic underline mb-6 text-gray-300 uppercase tracking-widest">Top Recommendations for You</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="affiliate-card p-4">
+                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
+                    <span class="text-gray-700 text-[10px]">Mic Image</span>
+                </div>
                 <p class="text-xs font-bold mb-2">Best Budget Mic</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
             </div>
             <div class="affiliate-card p-4">
+                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
+                    <span class="text-gray-700 text-[10px]">Tripod Image</span>
+                </div>
                 <p class="text-xs font-bold mb-2">Mobile Tripod</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
             </div>
             <div class="affiliate-card p-4">
+                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
+                    <span class="text-gray-700 text-[10px]">Light Image</span>
+                </div>
                 <p class="text-xs font-bold mb-2">Ring Light</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
             </div>
         </div>
+        
+        <p class="text-[10px] text-gray-500 uppercase font-bold">Powered by Suvarna Media</p>
     </div>
 
     <script>
-        // Aapka provide kiya hua logic
+        // Logic to handle redirection and countdown
         let urlParams = new URLSearchParams(window.location.search);
         let jumpTarget = urlParams.get('jump');
         let countdown = 5;
@@ -53,19 +72,23 @@
             if(countdown <= 0) {
                 clearInterval(timer);
                 if(jumpTarget) {
-                    const originalUrl = atob(jumpTarget); // Decode original link
+                    // Base64 decoding[cite: 1, 3]
+                    const decodedLink = atob(jumpTarget); 
                     
-                    // App Trigger Logic
-                    window.location.replace(originalUrl);
+                    // Trigger App Protocol[cite: 1]
+                    window.location.replace(decodedLink);
                     
-                    // Fallback to browser
+                    // Fallback to browser if app doesn't open in 2.5 seconds[cite: 1]
                     setTimeout(() => {
-                        let fallback = originalUrl;
-                        if(originalUrl.startsWith("vnd.youtube://")) {
-                            fallback = originalUrl.replace("vnd.youtube://", "https://www.youtube.com/watch?v=");
+                        let fallback = decodedLink;
+                        if(decodedLink.startsWith("vnd.youtube://")) {
+                            fallback = decodedLink.replace("vnd.youtube://", "https://www.youtube.com/watch?v=");
+                        } else {
+                            // Removing other app protocols for web fallback
+                            fallback = decodedLink.replace(/(youtube|instagram|fb|twitter|googleapp):\/\//, "https://");
                         }
                         window.location.href = fallback;
-                    }, 2000);
+                    }, 2500);
                 }
             }
         }, 1000);
