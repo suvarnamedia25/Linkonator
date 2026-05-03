@@ -103,35 +103,9 @@
             const input = document.getElementById('urlInput').value.trim();
             if(!input) return alert("Please paste a link!");
 
-            let smartLink = input;
-
-            // Multi-Platform Detection Logic
-            if (input.includes("youtube.com") || input.includes("youtu.be")) {
-                if (input.includes("watch?v=")) {
-                    const videoId = input.split('v=')[1].split('&')[0];
-                    smartLink = `vnd.youtube://${videoId}`;
-                } else if (input.includes("shorts/")) {
-                    const shortId = input.split('shorts/')[1].split('?')[0];
-                    smartLink = `vnd.youtube://shorts/${shortId}`;
-                } else {
-                    smartLink = input.replace(/^https?:\/\//, "youtube://");
-                }
-            } 
-            else if (input.includes("instagram.com")) {
-                smartLink = input.replace(/^https?:\/\//, "instagram://");
-            } 
-            else if (input.includes("facebook.com") || input.includes("fb.watch")) {
-                smartLink = input.replace(/^https?:\/\//, "fb://");
-            } 
-            else if (input.includes("twitter.com") || input.includes("x.com")) {
-                smartLink = input.replace(/^https?:\/\//, "twitter://");
-            } 
-            else if (input.includes("google.com")) {
-                smartLink = input.replace(/^https?:\/\//, "googleapp://");
-            }
-
-            // Encode to Base64 and create Jump URL
-            const finalURL = window.location.origin + window.location.pathname + "?jump=" + btoa(smartLink);
+            // No modification here: Just wrap the original link for redirect.html
+            // This prevents "Video Not Found" errors by processing the link ONLY at redirection
+            const finalURL = window.location.origin + "/redirect.html?jump=" + btoa(input);
             
             document.getElementById('generatedLink').innerText = finalURL;
             document.getElementById('resultSection').classList.remove('hidden');
@@ -141,35 +115,6 @@
             const link = document.getElementById('generatedLink').innerText;
             navigator.clipboard.writeText(link);
             alert("Link Copied!");
-        }
-
-        // Auto-redirect logic
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const jumpTarget = urlParams.get('jump');
-            
-            if(jumpTarget) {
-                const decodedLink = atob(jumpTarget);
-                document.body.innerHTML = `
-                    <div class='flex flex-col items-center justify-center h-screen'>
-                        <h1 class='text-2xl font-bold'>Opening in App...</h1>
-                        <p class='text-gray-500 mt-2'>Please wait a moment</p>
-                    </div>`;
-                
-                // Try App Protocol[cite: 1]
-                window.location.href = decodedLink;
-                
-                // Fallback to Web if App doesn't open[cite: 1]
-                setTimeout(() => {
-                    let fallback = decodedLink;
-                    if(decodedLink.startsWith("vnd.youtube://")) {
-                        fallback = decodedLink.replace("vnd.youtube://", "https://www.youtube.com/watch?v=");
-                    } else {
-                        fallback = decodedLink.replace(/(youtube|instagram|fb|twitter|googleapp):\/\//, "https://");
-                    }
-                    window.location.href = fallback;
-                }, 2500);
-            }
         }
     </script>
 </body>
