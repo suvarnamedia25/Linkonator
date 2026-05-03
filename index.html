@@ -11,6 +11,9 @@
         .input-field { background-color: #0d111d; border: 1px solid #1e2638; }
         .ad-space { border: 2px dashed #2d364d; color: #4b5563; }
         .affiliate-card { background-color: #1c2237; border-radius: 1rem; }
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 50; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
+        .modal-content { background-color: #161b2c; margin: 10% auto; padding: 2rem; border: 1px solid #2d364d; width: 90%; max-width: 500px; border-radius: 2rem; }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 md:p-10">
@@ -20,12 +23,39 @@
         <div class="text-xl font-bold flex items-center gap-2">
             <span class="text-blue-400">⚡</span> Linkonator
         </div>
-        <div class="text-sm text-gray-400 hover:text-white cursor-pointer transition">How it works</div>
+        <!-- Dynamic Link for Modal -->
+        <div onclick="toggleModal(true)" class="text-sm text-gray-400 hover:text-white cursor-pointer transition border-b border-gray-700 hover:border-white">How it works</div>
+    </div>
+
+    <!-- How It Works Modal -->
+    <div id="howItWorksModal" class="modal">
+        <div class="modal-content shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-blue-400">How it Works? ⚡</h2>
+                <button onclick="toggleModal(false)" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="space-y-4 text-sm text-gray-300">
+                <div class="flex gap-3">
+                    <span class="bg-blue-600/20 text-blue-400 h-6 w-6 rounded-full flex items-center justify-center font-bold">1</span>
+                    <p>Paste your social media link (YouTube, Instagram, etc.) in the input box.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-blue-600/20 text-blue-400 h-6 w-6 rounded-full flex items-center justify-center font-bold">2</span>
+                    <p>We generate a <b>Smart ID</b> and save it in our secure database.</p>
+                </div>
+                <div class="flex gap-3">
+                    <span class="bg-blue-600/20 text-blue-400 h-6 w-6 rounded-full flex items-center justify-center font-bold">3</span>
+                    <p>Share the link! When users click, they see a 5-sec ad timer before the app opens.</p>
+                </div>
+                <div class="p-4 bg-blue-600/10 rounded-xl border border-blue-500/20 mt-4 text-[11px] text-blue-300">
+                    <b>Pro Tip:</b> This increases your engagement by 70% by avoiding the "In-App Browser" login issues.
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Main Tool Card -->
     <div class="w-full max-w-3xl main-card p-6 md:p-12 shadow-2xl">
-        
         <div class="text-center mb-10">
             <h1 class="text-3xl font-bold mb-2 text-white">Creator Smart Links</h1>
             <p class="text-gray-400 text-sm">Boost your engagement by opening apps directly.</p>
@@ -51,7 +81,7 @@
                 </div>
             </div>
 
-            <!-- Integrated Share Buttons Section -->
+            <!-- Share Buttons Section -->
             <div id="shareSection" class="hidden flex justify-center gap-4">
                 <button onclick="shareWhatsApp()" class="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-6 py-3 rounded-xl font-bold text-sm transition shadow-lg shadow-green-900/20">
                     <span>WhatsApp</span>
@@ -116,7 +146,7 @@
 
     <p class="mt-8 text-[10px] text-gray-600 font-bold uppercase tracking-widest">© 2026 Suvarna Media Group</p>
 
-    <!-- Firebase Logic Section -->
+    <!-- Firebase & Logic Section -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -134,13 +164,17 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Modal Functionality
+        window.toggleModal = function(show) {
+            document.getElementById('howItWorksModal').style.display = show ? 'block' : 'none';
+        }
+
         async function updateLinkCounter() {
             try {
                 const coll = collection(db, "links");
                 const snapshot = await getCountFromServer(coll);
                 document.getElementById('totalLinksCount').innerText = snapshot.data().count.toLocaleString();
             } catch (e) {
-                console.error("Counter Error: ", e);
                 document.getElementById('totalLinksCount').innerText = "0";
             }
         }
@@ -163,42 +197,32 @@
                 });
 
                 const finalURL = window.location.origin + "/redirect.html?id=" + docRef.id;
-                
                 document.getElementById('generatedLink').innerText = finalURL;
                 document.getElementById('resultSection').classList.remove('hidden');
-                
-                // Show share buttons once link is generated
                 document.getElementById('shareSection').classList.remove('hidden');
                 
                 btn.innerText = "Generate Smart Link";
                 btn.disabled = false;
                 updateLinkCounter();
-                
             } catch (e) {
-                console.error("Error: ", e);
-                alert("Database Error! Please check your Firebase rules.");
-                btn.innerText = "Generate Smart Link";
+                alert("Error! Check Firebase Rules.");
                 btn.disabled = false;
             }
         }
 
         window.copyLink = function() {
-            const link = document.getElementById('generatedLink').innerText;
-            navigator.clipboard.writeText(link);
-            alert("Link Copied to Clipboard!");
+            navigator.clipboard.writeText(document.getElementById('generatedLink').innerText);
+            alert("Link Copied!");
         }
 
-        // Integrated Sharing Functions
         window.shareWhatsApp = function() {
             const link = document.getElementById('generatedLink').innerText;
-            const text = encodeURIComponent("Boost your engagement with my new smart link: " + link);
-            window.open(`https://wa.me/?text=${text}`, '_blank');
+            window.open(`https://wa.me/?text=${encodeURIComponent("Open directly in App: " + link)}`, '_blank');
         };
 
         window.shareInstagram = function() {
-            const link = document.getElementById('generatedLink').innerText;
-            navigator.clipboard.writeText(link);
-            alert("Link copied! Now you can paste it in your Instagram Bio or Story.");
+            copyLink();
+            alert("Link copied! Opening Instagram...");
             window.open(`https://www.instagram.com/`, '_blank');
         };
     </script>
