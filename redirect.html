@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linkonator - Redirecting...</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0b0f1a; color: white; font-family: 'Segoe UI', sans-serif; }
+        .main-card { background-color: #161b2c; border: 1px solid #2d364d; border-radius: 2rem; }
+        .affiliate-card { background-color: #1c2237; border-radius: 1rem; }
+    </style>
+</head>
+<body class="flex flex-col items-center p-6 md:p-10">
+
+    <div class="w-full max-w-3xl main-card p-10 text-center shadow-2xl">
+        <h1 id="timerText" class="text-3xl font-bold mb-4 text-blue-400">Opening App in 5...</h1>
+        <p class="text-gray-400 mb-8 italic">Please wait while we boost your engagement safely.</p>
+
+        <!-- Ad Space Placeholder -->
+        <div class="border-2 border-dashed border-[#2d364d] text-gray-600 py-10 rounded-2xl mb-10 font-bold">
+            NATIVE BANNER AD SPACE
+        </div>
+
+        <!-- Essential for Creators (Affiliate Section) -->
+        <h3 class="text-sm font-bold italic underline mb-6 text-gray-300">Top Recommendations for You</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="affiliate-card p-4">
+                <p class="text-xs font-bold mb-2">Best Budget Mic</p>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+            </div>
+            <div class="affiliate-card p-4">
+                <p class="text-xs font-bold mb-2">Mobile Tripod</p>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+            </div>
+            <div class="affiliate-card p-4">
+                <p class="text-xs font-bold mb-2">Ring Light</p>
+                <a href="#" class="text-[10px] text-blue-400 underline italic">Check Price on Amazon</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Aapka provide kiya hua logic
+        let urlParams = new URLSearchParams(window.location.search);
+        let jumpTarget = urlParams.get('jump');
+        let countdown = 5;
+
+        const timer = setInterval(() => {
+            countdown--;
+            document.getElementById('timerText').innerText = `Opening App in ${countdown}...`;
+            
+            if(countdown <= 0) {
+                clearInterval(timer);
+                if(jumpTarget) {
+                    const originalUrl = atob(jumpTarget); // Decode original link
+                    
+                    // App Trigger Logic
+                    window.location.replace(originalUrl);
+                    
+                    // Fallback to browser
+                    setTimeout(() => {
+                        let fallback = originalUrl;
+                        if(originalUrl.startsWith("vnd.youtube://")) {
+                            fallback = originalUrl.replace("vnd.youtube://", "https://www.youtube.com/watch?v=");
+                        }
+                        window.location.href = fallback;
+                    }, 2000);
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
