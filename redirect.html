@@ -6,25 +6,84 @@
     <title>Linkonator - Redirecting...</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0b0f1a; color: white; font-family: 'Segoe UI', sans-serif; }
-        .main-card { background-color: #161b2c; border: 1px solid #2d364d; border-radius: 2rem; }
+        body { background-color: #0b0f1a; color: white; font-family: 'Segoe UI', sans-serif; overflow-x: hidden; }
+        .main-card { background-color: #161b2c; border: 1px solid #2d364d; border-radius: 2.5rem; position: relative; overflow: hidden; }
+        .affiliate-card { background: linear-gradient(145deg, #1c2237, #161b2c); border: 1px solid #2d364d; border-radius: 1.5rem; transition: transform 0.3s ease; }
+        .affiliate-card:hover { transform: translateY(-5px); border-color: #3b82f6; }
+        .progress-bar { height: 4px; background: #1e2638; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #3b82f6; width: 0%; transition: width 1s linear; }
+        .shimmer { background: linear-gradient(90deg, #161b2c 0%, #1e2638 50%, #161b2c 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
-<body class="flex flex-col items-center p-6 md:p-10">
+<body class="flex flex-col items-center p-6 md:p-10 min-h-screen">
 
-    <div class="w-full max-w-3xl main-card p-10 text-center shadow-2xl mt-20">
-        <h1 id="timerText" class="text-3xl font-bold mb-4 text-blue-400">Searching...</h1>
-        <p class="text-gray-400 mb-8 italic">Preparing your smart app redirection.</p>
-        
-        <div class="border-2 border-dashed border-[#2d364d] text-gray-600 py-10 rounded-2xl mb-10 font-bold uppercase text-xs">
-            Native Ad Slot (Revenue Engine)
+    <!-- Branding Header -->
+    <div class="w-full max-w-4xl flex justify-between items-center mb-12 px-4">
+        <div class="text-xl font-bold flex items-center gap-2">
+            <span class="text-blue-400">⚡</span> Linkonator
         </div>
-        <p class="text-[10px] text-gray-500 font-bold">SUVARNA MEDIA UTILITY</p>
+        <div class="px-4 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full text-[10px] font-bold text-blue-400 uppercase tracking-tighter">
+            Secure Redirect
+        </div>
     </div>
 
+    <div class="w-full max-w-3xl main-card p-8 md:p-14 shadow-2xl">
+        
+        <!-- Redirection Status Section -->
+        <div class="text-center mb-10">
+            <h1 id="timerText" class="text-3xl md:text-4xl font-black mb-4 text-white uppercase tracking-tight">Searching Database...</h1>
+            <p id="subText" class="text-gray-400 text-sm mb-6">Verifying secure connection to the app.</p>
+            
+            <!-- Visual Progress Bar -->
+            <div class="progress-bar max-w-xs mx-auto mb-4">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Ad Slot (Revenue Engine) -->
+        <div class="w-full bg-[#0d111d] border-2 border-dashed border-[#2d364d] rounded-2xl py-12 text-center mb-12 group hover:border-blue-500/30 transition-colors">
+            <p class="text-gray-600 text-xs font-bold tracking-widest uppercase mb-2">Sponsored Content</p>
+            <div class="text-gray-700 italic text-sm font-medium">Native Display Ad Placement</div>
+        </div>
+
+        <!-- Affiliate Recommendations Section -->
+        <div class="mb-10">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-[1px] flex-1 bg-gray-800"></div>
+                <h3 class="text-[11px] font-black text-gray-500 uppercase tracking-[0.2em]">Creator Essentials</h3>
+                <div class="h-[1px] flex-1 bg-gray-800"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="affiliate-card p-5">
+                    <div class="shimmer h-28 rounded-xl mb-4"></div>
+                    <p class="text-xs font-bold text-white mb-2">Professional Mic</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                </div>
+                <div class="affiliate-card p-5">
+                    <div class="shimmer h-28 rounded-xl mb-4"></div>
+                    <p class="text-xs font-bold text-white mb-2">Stable Tripod</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                </div>
+                <div class="affiliate-card p-5">
+                    <div class="shimmer h-28 rounded-xl mb-4"></div>
+                    <p class="text-xs font-bold text-white mb-2">Key Lighting</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Footer -->
+        <div class="pt-8 border-t border-gray-800 flex justify-center items-center gap-4">
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-50">Powered by Suvarna Media Group</p>
+        </div>
+    </div>
+
+    <!-- Firebase Integrated Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCxy9tjU9gjdKK0blt0MRk-Tc_n8-igju4",
@@ -44,49 +103,60 @@
             const id = params.get('id');
 
             if (!id) {
-                document.getElementById('timerText').innerText = "Link Invalid";
+                document.getElementById('timerText').innerText = "Link Broken";
                 return;
             }
 
             try {
-                // Fetching original URL from Firestore[cite: 1]
+                // Fetch Link from Database
                 const snap = await getDoc(doc(db, "links", id));
 
                 if (snap.exists()) {
                     const originalUrl = snap.data().originalURL;
                     
-                    let countdown = 5;
-                    const timer = setInterval(() => {
-                        countdown--;
-                        document.getElementById('timerText').innerText = `Opening App in ${countdown}...`;
-                        if (countdown <= 0) {
-                            clearInterval(timer);
-                            performRedirect(originalUrl);
+                    // Increment Analytics Click
+                    await updateDoc(doc(db, "links", id), { clicks: increment(1) });
+
+                    document.getElementById('subText').innerText = "Link Verified. Redirecting safely.";
+                    
+                    // Start 5-second countdown
+                    let count = 5;
+                    const interval = setInterval(() => {
+                        count--;
+                        document.getElementById('timerText').innerText = `Opening App in ${count}...`;
+                        document.getElementById('progressFill').style.width = `${(5-count)*20}%`;
+                        
+                        if (count <= 0) {
+                            clearInterval(interval);
+                            handleRedirect(originalUrl);
                         }
                     }, 1000);
 
                 } else {
-                    document.getElementById('timerText').innerText = "Link Not Found";
+                    document.getElementById('timerText').innerText = "Invalid Link";
                 }
             } catch (err) {
-                document.getElementById('timerText').innerText = "Error Fetching Data";
+                console.error(err);
+                document.getElementById('timerText').innerText = "Offline Error";
             }
         }
 
-        function performRedirect(url) {
-            let target = url;
-            // Enhanced App Protocol detection[cite: 1]
-            if (url.includes("youtube.com/watch?v=")) {
-                const vid = url.split("v=")[1].split("&")[0];
-                target = `vnd.youtube://${vid}`;
-            } else if (url.includes("youtube.com/shorts/")) {
-                const sid = url.split("shorts/")[1].split("?")[0];
-                target = `vnd.youtube://shorts/${sid}`;
+        function handleRedirect(url) {
+            let protocolUrl = url;
+            // Smart Protocol Conversion
+            if (url.includes("youtube.com") || url.includes("youtu.be")) {
+                if (url.includes("watch?v=")) {
+                    const vid = url.split("v=")[1].split("&")[0];
+                    protocolUrl = `vnd.youtube://${vid}`;
+                } else if (url.includes("shorts/")) {
+                    const sid = url.split("shorts/")[1].split("?")[0];
+                    protocolUrl = `vnd.youtube://shorts/${sid}`;
+                }
             } else if (url.includes("instagram.com")) {
-                target = url.replace(/^https?:\/\//, "instagram://");
+                protocolUrl = url.replace(/^https?:\/\//, "instagram://");
             }
 
-            window.location.replace(target);
+            window.location.replace(protocolUrl);
             setTimeout(() => { window.location.href = url; }, 2500); // Fallback[cite: 1]
         }
 
