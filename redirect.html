@@ -8,90 +8,89 @@
     <style>
         body { background-color: #0b0f1a; color: white; font-family: 'Segoe UI', sans-serif; }
         .main-card { background-color: #161b2c; border: 1px solid #2d364d; border-radius: 2rem; }
-        .affiliate-card { background-color: #1c2237; border-radius: 1rem; }
     </style>
 </head>
 <body class="flex flex-col items-center p-6 md:p-10">
 
-    <!-- Header Branding -->
-    <div class="w-full max-w-4xl flex justify-center items-center mb-8 px-4">
-        <div class="text-xl font-bold flex items-center gap-2">
-            <span class="text-blue-400">⚡</span> Linkonator
-        </div>
-    </div>
-
-    <div class="w-full max-w-3xl main-card p-10 text-center shadow-2xl">
-        <!-- Timer Section -->
-        <h1 id="timerText" class="text-3xl font-bold mb-4 text-blue-400">Opening App in 5...</h1>
-        <p class="text-gray-400 mb-8 italic">Please wait while we boost your engagement safely.</p>
-
-        <!-- Ad Space Placeholder[cite: 2] -->
-        <div class="border-2 border-dashed border-[#2d364d] text-gray-600 py-10 rounded-2xl mb-10 font-bold">
-            NATIVE BANNER AD SPACE
-        </div>
-
-        <!-- Essential for Creators (Affiliate Section)[cite: 2] -->
-        <h3 class="text-sm font-bold italic underline mb-6 text-gray-300 uppercase tracking-widest">Top Recommendations for You</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <div class="affiliate-card p-4">
-                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
-                    <span class="text-gray-700 text-[10px]">Mic Image</span>
-                </div>
-                <p class="text-xs font-bold mb-2">Best Budget Mic</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
-            </div>
-            <div class="affiliate-card p-4">
-                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
-                    <span class="text-gray-700 text-[10px]">Tripod Image</span>
-                </div>
-                <p class="text-xs font-bold mb-2">Mobile Tripod</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
-            </div>
-            <div class="affiliate-card p-4">
-                <div class="bg-slate-900 rounded-lg h-24 flex items-center justify-center mb-3">
-                    <span class="text-gray-700 text-[10px]">Light Image</span>
-                </div>
-                <p class="text-xs font-bold mb-2">Ring Light</p>
-                <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
-            </div>
-        </div>
+    <div class="w-full max-w-3xl main-card p-10 text-center shadow-2xl mt-20">
+        <h1 id="timerText" class="text-3xl font-bold mb-4 text-blue-400">Searching...</h1>
+        <p class="text-gray-400 mb-8 italic">Preparing your smart app redirection.</p>
         
-        <p class="text-[10px] text-gray-500 uppercase font-bold">Powered by Suvarna Media</p>
+        <div class="border-2 border-dashed border-[#2d364d] text-gray-600 py-10 rounded-2xl mb-10 font-bold uppercase text-xs">
+            Native Ad Slot (Revenue Engine)
+        </div>
+        <p class="text-[10px] text-gray-500 font-bold">SUVARNA MEDIA UTILITY</p>
     </div>
 
-    <script>
-        // Logic to handle redirection and countdown
-        let urlParams = new URLSearchParams(window.location.search);
-        let jumpTarget = urlParams.get('jump');
-        let countdown = 5;
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const timer = setInterval(() => {
-            countdown--;
-            document.getElementById('timerText').innerText = `Opening App in ${countdown}...`;
-            
-            if(countdown <= 0) {
-                clearInterval(timer);
-                if(jumpTarget) {
-                    // Base64 decoding[cite: 1, 3]
-                    const decodedLink = atob(jumpTarget); 
-                    
-                    // Trigger App Protocol[cite: 1]
-                    window.location.replace(decodedLink);
-                    
-                    // Fallback to browser if app doesn't open in 2.5 seconds[cite: 1]
-                    setTimeout(() => {
-                        let fallback = decodedLink;
-                        if(decodedLink.startsWith("vnd.youtube://")) {
-                            fallback = decodedLink.replace("vnd.youtube://", "https://www.youtube.com/watch?v=");
-                        } else {
-                            // Removing other app protocols for web fallback
-                            fallback = decodedLink.replace(/(youtube|instagram|fb|twitter|googleapp):\/\//, "https://");
-                        }
-                        window.location.href = fallback;
-                    }, 2500);
-                }
+        const firebaseConfig = {
+            apiKey: "AIzaSyCxy9tjU9gjdKK0blt0MRk-Tc_n8-igju4",
+            authDomain: "linkonator.firebaseapp.com",
+            projectId: "linkonator",
+            storageBucket: "linkonator.firebasestorage.app",
+            messagingSenderId: "143202043038",
+            appId: "1:143202043038:web:f1def347da0d73e8de278f",
+            measurementId: "G-E93SYCVE4Z"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function init() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+
+            if (!id) {
+                document.getElementById('timerText').innerText = "Link Invalid";
+                return;
             }
-        }, 1000);
+
+            try {
+                // Fetching original URL from Firestore[cite: 1]
+                const snap = await getDoc(doc(db, "links", id));
+
+                if (snap.exists()) {
+                    const originalUrl = snap.data().originalURL;
+                    
+                    let countdown = 5;
+                    const timer = setInterval(() => {
+                        countdown--;
+                        document.getElementById('timerText').innerText = `Opening App in ${countdown}...`;
+                        if (countdown <= 0) {
+                            clearInterval(timer);
+                            performRedirect(originalUrl);
+                        }
+                    }, 1000);
+
+                } else {
+                    document.getElementById('timerText').innerText = "Link Not Found";
+                }
+            } catch (err) {
+                document.getElementById('timerText').innerText = "Error Fetching Data";
+            }
+        }
+
+        function performRedirect(url) {
+            let target = url;
+            // Enhanced App Protocol detection[cite: 1]
+            if (url.includes("youtube.com/watch?v=")) {
+                const vid = url.split("v=")[1].split("&")[0];
+                target = `vnd.youtube://${vid}`;
+            } else if (url.includes("youtube.com/shorts/")) {
+                const sid = url.split("shorts/")[1].split("?")[0];
+                target = `vnd.youtube://shorts/${sid}`;
+            } else if (url.includes("instagram.com")) {
+                target = url.replace(/^https?:\/\//, "instagram://");
+            }
+
+            window.location.replace(target);
+            setTimeout(() => { window.location.href = url; }, 2500); // Fallback[cite: 1]
+        }
+
+        init();
     </script>
 </body>
 </html>
