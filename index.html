@@ -27,7 +27,7 @@
     <div class="w-full max-w-3xl main-card p-6 md:p-12 shadow-2xl">
         
         <div class="text-center mb-10">
-            <h1 class="text-3xl font-bold mb-2">Creator Smart Links</h1>
+            <h1 class="text-3xl font-bold mb-2 text-white">Creator Smart Links</h1>
             <p class="text-gray-400 text-sm">Boost your engagement by opening apps directly.</p>
         </div>
 
@@ -44,7 +44,7 @@
             </button>
             <div id="resultSection" class="hidden bg-slate-800 p-3 rounded-xl flex items-center gap-3 border border-slate-700">
                 <span id="generatedLink" class="text-xs text-blue-400 truncate max-w-[150px]"></span>
-                <button onclick="copyLink()" class="text-gray-400 hover:text-white font-bold text-xs uppercase">
+                <button onclick="copyLink()" class="text-gray-400 hover:text-white font-bold text-xs uppercase transition">
                     Copy
                 </button>
             </div>
@@ -61,21 +61,21 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="affiliate-card p-4 text-center">
                     <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
-                        <span class="text-gray-700 text-xs">Product Image</span>
+                        <span class="text-gray-700 text-xs font-bold uppercase">Product Image</span>
                     </div>
                     <p class="text-xs font-bold mb-1">Best Budget Mic</p>
                     <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
                 </div>
                 <div class="affiliate-card p-4 text-center">
                     <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
-                        <span class="text-gray-700 text-xs">Product Image</span>
+                        <span class="text-gray-700 text-xs font-bold uppercase">Product Image</span>
                     </div>
                     <p class="text-xs font-bold mb-1">Mobile Tripod</p>
                     <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
                 </div>
                 <div class="affiliate-card p-4 text-center">
                     <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
-                        <span class="text-gray-700 text-xs">Product Image</span>
+                        <span class="text-gray-700 text-xs font-bold uppercase">Product Image</span>
                     </div>
                     <p class="text-xs font-bold mb-1">Ring Light</p>
                     <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
@@ -92,8 +92,9 @@
                 <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Global App Support</p>
             </div>
             <div class="text-center">
-                <p class="text-3xl font-bold text-gray-200">5,432</p>
-                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Links Created Today</p>
+                <!-- Live Counter ID added here[cite: 1] -->
+                <p id="totalLinksCount" class="text-3xl font-bold text-gray-200">...</p>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Total Links Created</p>
             </div>
             <div class="text-center bg-green-500/5 p-3 rounded-xl border border-green-500/10">
                 <p class="text-[10px] text-green-500 font-bold">Analytics Preview</p>
@@ -104,11 +105,12 @@
 
     <p class="mt-8 text-[10px] text-gray-600 font-bold uppercase tracking-widest">© 2026 Suvarna Media Group</p>
 
-    <!-- Firebase Integrated Logic[cite: 1] -->
+    <!-- Firebase Logic Section[cite: 1] -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, getCountFromServer } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+        // Firebase Config from your project settings[cite: 1]
         const firebaseConfig = {
             apiKey: "AIzaSyCxy9tjU9gjdKK0blt0MRk-Tc_n8-igju4",
             authDomain: "linkonator.firebaseapp.com",
@@ -122,6 +124,22 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // Function to fetch total links count from database[cite: 1]
+        async function updateLinkCounter() {
+            try {
+                const coll = collection(db, "links");
+                const snapshot = await getCountFromServer(coll);
+                document.getElementById('totalLinksCount').innerText = snapshot.data().count.toLocaleString();
+            } catch (e) {
+                console.error("Counter Error: ", e);
+                document.getElementById('totalLinksCount').innerText = "0";
+            }
+        }
+
+        // Initial load of the counter
+        updateLinkCounter();
+
+        // Main function to generate and save link[cite: 1]
         window.generateLink = async function() {
             const input = document.getElementById('urlInput').value.trim();
             const btn = document.getElementById('genBtn');
@@ -131,21 +149,27 @@
             btn.disabled = true;
 
             try {
+                // Saving link to Firestore 'links' collection[cite: 1]
                 const docRef = await addDoc(collection(db, "links"), {
                     originalURL: input,
                     createdAt: serverTimestamp(),
                     clicks: 0
                 });
 
+                // Generating the short link with unique Document ID[cite: 1]
                 const finalURL = window.location.origin + "/redirect.html?id=" + docRef.id;
                 
                 document.getElementById('generatedLink').innerText = finalURL;
                 document.getElementById('resultSection').classList.remove('hidden');
                 btn.innerText = "Generate Smart Link";
                 btn.disabled = false;
+                
+                // Refresh the global counter[cite: 1]
+                updateLinkCounter();
+                
             } catch (e) {
                 console.error("Error: ", e);
-                alert("Database Error! Check your Firebase rules.");
+                alert("Database Error! Please check your Firebase rules.");
                 btn.innerText = "Generate Smart Link";
                 btn.disabled = false;
             }
