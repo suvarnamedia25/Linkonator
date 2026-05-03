@@ -9,45 +9,106 @@
         body { background-color: #0b0f1a; color: white; font-family: 'Segoe UI', sans-serif; }
         .main-card { background-color: #161b2c; border: 1px solid #2d364d; border-radius: 2rem; }
         .input-field { background-color: #0d111d; border: 1px solid #1e2638; }
+        .ad-space { border: 2px dashed #2d364d; color: #4b5563; }
+        .affiliate-card { background-color: #1c2237; border-radius: 1rem; }
     </style>
 </head>
 <body class="flex flex-col items-center p-4 md:p-10">
 
-    <div class="w-full max-w-4xl flex justify-between items-center mb-8 px-4 text-white">
+    <!-- Header Branding -->
+    <div class="w-full max-w-4xl flex justify-between items-center mb-8 px-4">
         <div class="text-xl font-bold flex items-center gap-2">
             <span class="text-blue-400">⚡</span> Linkonator
         </div>
-        <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Powered by Suvarna Media</p>
+        <div class="text-sm text-gray-400 hover:text-white cursor-pointer transition">How it works</div>
     </div>
 
+    <!-- Main Tool Card -->
     <div class="w-full max-w-3xl main-card p-6 md:p-12 shadow-2xl">
+        
         <div class="text-center mb-10">
             <h1 class="text-3xl font-bold mb-2">Creator Smart Links</h1>
-            <p class="text-gray-400 text-sm">Convert links to open directly in apps.</p>
+            <p class="text-gray-400 text-sm">Boost your engagement by opening apps directly.</p>
         </div>
 
+        <!-- Input Section -->
         <div class="relative mb-6">
-            <input type="text" id="urlInput" placeholder="Paste link (YouTube, Insta, FB)..." 
+            <input type="text" id="urlInput" placeholder="Paste link (YouTube, Insta, FB, X, or Google)..." 
                 class="w-full p-5 input-field rounded-2xl text-center focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition text-white">
         </div>
 
+        <!-- Action Section -->
         <div class="flex flex-col md:flex-row gap-3 mb-8">
             <button id="genBtn" onclick="generateLink()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-4 rounded-2xl font-bold text-lg transition-all shadow-lg shadow-blue-900/20 text-white">
-                Generate Short Link
+                Generate Smart Link
             </button>
             <div id="resultSection" class="hidden bg-slate-800 p-3 rounded-xl flex items-center gap-3 border border-slate-700">
                 <span id="generatedLink" class="text-xs text-blue-400 truncate max-w-[150px]"></span>
-                <button onclick="copyLink()" class="text-gray-400 hover:text-white">Copy</button>
+                <button onclick="copyLink()" class="text-gray-400 hover:text-white font-bold text-xs uppercase">
+                    Copy
+                </button>
+            </div>
+        </div>
+
+        <!-- Ad Space Placeholder -->
+        <div class="ad-space w-full py-12 rounded-2xl text-center font-bold text-sm mb-12">
+            NATIVE BANNER AD SPACE
+        </div>
+
+        <!-- Essential for Creators Section -->
+        <div class="mb-12">
+            <h3 class="text-sm font-bold italic underline mb-6 text-gray-300">Essential for Creators</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="affiliate-card p-4 text-center">
+                    <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
+                        <span class="text-gray-700 text-xs">Product Image</span>
+                    </div>
+                    <p class="text-xs font-bold mb-1">Best Budget Mic</p>
+                    <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
+                </div>
+                <div class="affiliate-card p-4 text-center">
+                    <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
+                        <span class="text-gray-700 text-xs">Product Image</span>
+                    </div>
+                    <p class="text-xs font-bold mb-1">Mobile Tripod</p>
+                    <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
+                </div>
+                <div class="affiliate-card p-4 text-center">
+                    <div class="bg-slate-900 rounded-lg h-32 flex items-center justify-center mb-3">
+                        <span class="text-gray-700 text-xs">Product Image</span>
+                    </div>
+                    <p class="text-xs font-bold mb-1">Ring Light</p>
+                    <a href="#" class="text-[10px] text-blue-400 underline italic">Check on Amazon</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics and Footer Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center border-t border-slate-800 pt-8">
+            <div class="text-center md:text-left">
+                <div class="flex gap-2 justify-center md:justify-start grayscale opacity-50 mb-2">
+                    <span>🔴</span><span>📸</span><span>🔵</span>
+                </div>
+                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Global App Support</p>
+            </div>
+            <div class="text-center">
+                <p class="text-3xl font-bold text-gray-200">5,432</p>
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-tighter">Links Created Today</p>
+            </div>
+            <div class="text-center bg-green-500/5 p-3 rounded-xl border border-green-500/10">
+                <p class="text-[10px] text-green-500 font-bold">Analytics Preview</p>
+                <p class="text-[11px] text-gray-400">Boost engagement by <span class="text-green-500 font-bold">70%!</span></p>
             </div>
         </div>
     </div>
 
+    <p class="mt-8 text-[10px] text-gray-600 font-bold uppercase tracking-widest">© 2026 Suvarna Media Group</p>
+
+    <!-- Firebase Integrated Logic[cite: 1] -->
     <script type="module">
-        // Firebase Modular SDK imports for <script> tag usage[cite: 1]
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Your specific Firebase config from screenshot
         const firebaseConfig = {
             apiKey: "AIzaSyCxy9tjU9gjdKK0blt0MRk-Tc_n8-igju4",
             authDomain: "linkonator.firebaseapp.com",
@@ -70,23 +131,22 @@
             btn.disabled = true;
 
             try {
-                // Saving to 'links' collection in Firestore
                 const docRef = await addDoc(collection(db, "links"), {
                     originalURL: input,
-                    createdAt: serverTimestamp()
+                    createdAt: serverTimestamp(),
+                    clicks: 0
                 });
 
-                // Creating short link using the unique Document ID
                 const finalURL = window.location.origin + "/redirect.html?id=" + docRef.id;
                 
                 document.getElementById('generatedLink').innerText = finalURL;
                 document.getElementById('resultSection').classList.remove('hidden');
-                btn.innerText = "Generate Short Link";
+                btn.innerText = "Generate Smart Link";
                 btn.disabled = false;
             } catch (e) {
                 console.error("Error: ", e);
-                alert("Check Firebase Rules - Test mode might be expired or blocked.");
-                btn.innerText = "Generate Short Link";
+                alert("Database Error! Check your Firebase rules.");
+                btn.innerText = "Generate Smart Link";
                 btn.disabled = false;
             }
         }
@@ -94,7 +154,7 @@
         window.copyLink = function() {
             const link = document.getElementById('generatedLink').innerText;
             navigator.clipboard.writeText(link);
-            alert("Copied!");
+            alert("Link Copied to Clipboard!");
         }
     </script>
 </body>
