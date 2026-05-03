@@ -30,10 +30,17 @@
 
     <div class="w-full max-w-3xl main-card p-8 md:p-14 shadow-2xl">
         
+        <!-- Slot 1: Top Display Ad (High Visibility) -->
+        <div class="w-full h-20 bg-[#0d111d] rounded-xl mb-8 flex items-center justify-center border border-slate-800">
+            <span class="text-[10px] text-gray-700 font-bold uppercase tracking-widest italic">
+                Top Banner Ad Space (728x90)
+            </span>
+        </div>
+
         <!-- Redirection Status Section -->
         <div class="text-center mb-10">
             <h1 id="timerText" class="text-3xl md:text-4xl font-black mb-4 text-white uppercase tracking-tight">Searching Database...</h1>
-            <p id="subText" class="text-gray-400 text-sm mb-6">Verifying secure connection to the app.</p>
+            <p id="subText" class="text-gray-400 text-sm mb-6 font-medium">Verifying secure connection to the app.</p>
             
             <!-- Visual Progress Bar -->
             <div class="progress-bar max-w-xs mx-auto mb-4">
@@ -41,10 +48,12 @@
             </div>
         </div>
 
-        <!-- Ad Slot (Revenue Engine) -->
-        <div class="w-full bg-[#0d111d] border-2 border-dashed border-[#2d364d] rounded-2xl py-12 text-center mb-12 group hover:border-blue-500/30 transition-colors">
-            <p class="text-gray-600 text-xs font-bold tracking-widest uppercase mb-2">Sponsored Content</p>
-            <div class="text-gray-700 italic text-sm font-medium">Native Display Ad Placement</div>
+        <!-- Slot 2: Main Native Ad (Revenue Engine) -->
+        <div class="w-full bg-[#0d111d] border-2 border-dashed border-[#2d364d] rounded-2xl py-12 text-center mb-12 group hover:border-blue-500/30 transition-all">
+            <p class="text-gray-700 text-[10px] font-black tracking-[0.3em] uppercase mb-4 opacity-50">Sponsored Message</p>
+            <div class="text-gray-600 text-sm font-medium italic italic">
+                Native Display Ad Placement Space
+            </div>
         </div>
 
         <!-- Affiliate Recommendations Section -->
@@ -56,27 +65,27 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <div class="affiliate-card p-5">
+                <div class="affiliate-card p-5 text-center">
                     <div class="shimmer h-28 rounded-xl mb-4"></div>
-                    <p class="text-xs font-bold text-white mb-2">Professional Mic</p>
-                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                    <p class="text-xs font-bold text-white mb-2 uppercase">Budget Mic</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg transition-all uppercase">Buy Now</a>
                 </div>
-                <div class="affiliate-card p-5">
+                <div class="affiliate-card p-5 text-center">
                     <div class="shimmer h-28 rounded-xl mb-4"></div>
-                    <p class="text-xs font-bold text-white mb-2">Stable Tripod</p>
-                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                    <p class="text-xs font-bold text-white mb-2 uppercase">Stable Tripod</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg transition-all uppercase">Buy Now</a>
                 </div>
-                <div class="affiliate-card p-5">
+                <div class="affiliate-card p-5 text-center">
                     <div class="shimmer h-28 rounded-xl mb-4"></div>
-                    <p class="text-xs font-bold text-white mb-2">Key Lighting</p>
-                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg text-center transition-all uppercase">Buy Now</a>
+                    <p class="text-xs font-bold text-white mb-2 uppercase">Key Lighting</p>
+                    <a href="#" class="inline-block w-full py-2 bg-blue-600/10 hover:bg-blue-600 text-blue-400 hover:text-white text-[10px] font-bold rounded-lg transition-all uppercase">Buy Now</a>
                 </div>
             </div>
         </div>
 
-        <!-- Footer Footer -->
+        <!-- Footer -->
         <div class="pt-8 border-t border-gray-800 flex justify-center items-center gap-4">
-            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-50">Powered by Suvarna Media Group</p>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest opacity-50">© 2026 Suvarna Media Group</p>
         </div>
     </div>
 
@@ -108,18 +117,13 @@
             }
 
             try {
-                // Fetch Link from Database
                 const snap = await getDoc(doc(db, "links", id));
 
                 if (snap.exists()) {
                     const originalUrl = snap.data().originalURL;
-                    
-                    // Increment Analytics Click
                     await updateDoc(doc(db, "links", id), { clicks: increment(1) });
-
                     document.getElementById('subText').innerText = "Link Verified. Redirecting safely.";
                     
-                    // Start 5-second countdown
                     let count = 5;
                     const interval = setInterval(() => {
                         count--;
@@ -143,7 +147,6 @@
 
         function handleRedirect(url) {
             let protocolUrl = url;
-            // Smart Protocol Conversion
             if (url.includes("youtube.com") || url.includes("youtu.be")) {
                 if (url.includes("watch?v=")) {
                     const vid = url.split("v=")[1].split("&")[0];
@@ -157,7 +160,7 @@
             }
 
             window.location.replace(protocolUrl);
-            setTimeout(() => { window.location.href = url; }, 2500); // Fallback[cite: 1]
+            setTimeout(() => { window.location.href = url; }, 2500); // Fallback
         }
 
         init();
